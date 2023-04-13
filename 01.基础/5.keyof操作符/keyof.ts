@@ -17,10 +17,10 @@ type M = keyof Mapish
 
 // ---------- 1.数字字面量联合类型 ----------
 const NumericObject = {
-  [1]: "冴羽一号",
-  [2]: "冴羽二号",
-  [3]: "冴羽三号",
-  [4]: "冴羽四号",
+  [1]: "张三一号",
+  [2]: "张三二号",
+  [3]: "张三三号",
+  [4]: "张三四号",
 }
 
 type result = keyof typeof NumericObject
@@ -70,7 +70,7 @@ function useKey3<T, K extends keyof T>(o: T, k: K) {
 // ---- 对类使用 keyof ----
 // 例子一
 class Person3 {
-  name: "冴羽"
+  name: "张三"
 }
 
 type result2 = keyof Person3
@@ -78,7 +78,7 @@ type result2 = keyof Person3
 
 // 例子二
 class Person4 {
-  [1]: string = "冴羽"
+  [1]: string = "张三"
 }
 
 type result3 = keyof Person4
@@ -86,7 +86,7 @@ type result3 = keyof Person4
 
 // ---- 对接口使用 keyof ----
 interface Person5 {
-  name: "冴羽"
+  name: "张三"
 }
 
 type result4 = keyof Person5
