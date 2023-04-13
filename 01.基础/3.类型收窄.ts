@@ -115,3 +115,78 @@ console.log(x)
 x = 100
 console.log(x)
 // x: number
+
+// 1.7 控制流分析 (Control flow analysis)
+function example2() {
+  let x: string | number | boolean
+  x = Math.random() < 0.5
+  console.log(x)
+  // x: boolean
+  if (Math.random() < 0.5) {
+    x = "hello"
+    console.log(x)
+    // x: string
+  } else {
+    x = 100
+    console.log(x)
+    // x: number
+  }
+  return x
+  // x: string | number
+}
+// 这种基于可达性(reachability) 的代码分析就叫做控制流分析(control flow analysis)。
+
+// 1.8 类型判断式(type predicates)
+// https://ts.yayujs.com/handbook/Narrowing.html#%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD%E5%BC%8F-type-predicates
+// 看着比较模糊，先跳过
+
+// 1.9 可辨别联合 (Discriminated unions)
+interface Square {
+  kind: "square" // 可辨别属性
+  size: number
+}
+interface Circle {
+  kind: "circle" // 可辨别属性
+  radius: number
+}
+type Shape = Square | Circle
+
+function area(s: Shape) {
+  switch (s.kind) {
+    case "square":
+      return s.size * s.size
+    // (parameter) s: Square
+    case "circle":
+      return Math.PI * s.radius ** 2
+    // (parameter) s: Circle
+  }
+}
+// 当联合类型中的每个类型，都包含了一个共同的字面量类型的属性，TypeScript 就会认为这是一个可辨别联合（discriminated union），然后可以将具体成员的类型进行收窄。
+// 在这个例子中，kind 就是这个公共的属性（作为 Shape 的可辨别(discriminant) 属性 ）。
+
+// never 类型
+// never 类型表示的是那些永不存在的值的类型。 例如，never 类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型；变量也可能是 never 类型，当它们被永不为真的类型保护所约束时。
+
+// 1.10 穷尽性检查 (Exhaustiveness checking)
+interface Triangle {
+  kind: "triangle"
+  sideLength: number
+}
+type Shape2 = Square | Circle | Triangle
+function area2(s: Shape2) {
+  switch (s.kind) {
+    case "square":
+      return s.size * s.size
+    // (parameter) s: Square
+    case "circle":
+      return Math.PI * s.radius ** 2
+    // (parameter) s: Circle
+    default:
+      const _exhaustiveCheck: never = s
+      // 不能将类型“Triangle”分配给类型“never”。
+      return _exhaustiveCheck
+  }
+}
+
+// 因为 TypeScript 的收窄特性，执行到 default 的时候，类型被收窄为 Triangle，但因为任何类型都不能赋值给 never 类型，这就会产生一个编译错误。
+// 通过这种方式，你就可以确保 getArea 函数总是穷尽了所有 shape 的可能性
