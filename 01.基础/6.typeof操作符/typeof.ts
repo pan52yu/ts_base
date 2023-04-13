@@ -2,6 +2,9 @@
 let s = "hello"
 let n: typeof s
 // let n: string
+n = "Hello, TypeScript"
+n = 123
+// 不能将类型“number”分配给类型“string”
 
 // ts 内置的 ReturnType<T> 类型可以获取函数返回值的类型
 type Predicate = (x: unknown) => boolean
